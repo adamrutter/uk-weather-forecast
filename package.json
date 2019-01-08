@@ -1,0 +1,19 @@
+{
+  "name": "weather-forecast",
+  "version": "1.0.0",
+  "description": "A small web page providing UK weather forecasts",
+  "main": "forecast.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamrutter/weather-forecast.git"
+  },
+  "author": "Adam Rutter",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/adamrutter/weather-forecast/issues"
+  },
+  "homepage": "https://github.com/adamrutter/weather-forecast#readme",
+  "devDependencies": {
+    "eslint": "^5.12.0"
+  }
+}

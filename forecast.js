@@ -1,5 +1,6 @@
 // Function to append a forecast to the page
 function appendForecast(forecast, currentTable) {
+  
   // Get rows from the current table
   const timeRow = currentTable.querySelector('.time');
   const iconRow = currentTable.querySelector('.icon');

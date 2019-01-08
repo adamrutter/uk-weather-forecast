@@ -28,7 +28,7 @@ Once we have the location, we can query the Open Weather Map API using the provi
 
 ## Formatting and appending the forecast
 
-We can now loop through the 3 hourly forecasts, format them, and append them to the document.
+We can now loop through the 3-hourly forecasts, format them, and append them to the document.
 
 ### Formatting
 

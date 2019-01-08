@@ -4,7 +4,7 @@ A small web page providing UK weather forecasts, built as a beginner JavaScript 
 
 It uses the Google Geolocation API to locate the user, the Google Geocoding API to provide a search functionality, and the Open Weather Map API to provide forecasts.
 
-The web page can be found [here](adams-weather-forecast.netlify.com/).
+The web page can be found [here](https://adams-weather-forecast.netlify.com/).
 
 ![](example.png)
 

@@ -1,6 +1,6 @@
 // Function to append a forecast to the page
 function appendForecast(forecast, currentTable) {
-  
+
   // Get rows from the current table
   const timeRow = currentTable.querySelector('.time');
   const iconRow = currentTable.querySelector('.icon');
@@ -206,7 +206,7 @@ function getWeather(location) {
 
   // Construct api query for Open Weather Map
   const apiKey = '4d5128da40eb9555a11cfde0c4a093c8';
-  const apiEndpoint = 'http://api.openweathermap.org/data/2.5/forecast?';
+  const apiEndpoint = 'https://api.openweathermap.org/data/2.5/forecast?';
   const latitude = location.latitude;
   const longitude = location.longitude;
   const units = 'metric';

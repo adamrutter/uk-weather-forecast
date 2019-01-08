@@ -291,13 +291,14 @@ function locationSearch(event) {
 }
 
 // Function to pad numbers
-Number.prototype.pad = function (size) {
-  const s = String(this);
-  while (s.length < (size || 2)) { s = '0' + s; }
+Number.prototype.pad = function(size) {
+  var s = String(this);
+  while (s.length < (size || 2)) {s = "0" + s;}
   return s;
-};
+}
 
 // Event listeners
+
 document.addEventListener('DOMContentLoaded', getLocation());
 document.addEventListener('DOMContentLoaded,', changeTabs());
 document.querySelector('.search.container').addEventListener('submit', event => locationSearch(event));

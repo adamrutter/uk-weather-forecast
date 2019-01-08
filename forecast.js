@@ -159,6 +159,46 @@ function nameTab(todayDate, forecastDate) {
   }
 }
 
+// Change tabs
+function changeTabs() {
+  const tabContainer = document.querySelector('.tab.container');
+  const forecastTables = document.querySelectorAll('.forecast.container table');
+
+  // Add event listener to the tab container
+  tabContainer.addEventListener('click', (e) => {
+    if (e.target.tagName === 'LI') {
+      const targetForecast = 'day' + e.target.id.slice(3);
+
+      // Switch active content
+      forecastTables.forEach((forecast) => {
+        if (forecast.id === targetForecast) {
+          forecast.classList.add('active');
+        } else {
+          forecast.classList.remove('active');
+        }
+      });
+
+      // Switch active tab
+      tabContainer.querySelectorAll('li').forEach((tab) => {
+        if (tab === e.target) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+    }
+  });
+}
+
+// Remove forecasts
+function removeForecasts() {
+  const tableRows = document.querySelectorAll('tr');
+  tableRows.forEach((row) => {
+    while (row.firstChild) {
+      row.removeChild(row.firstChild);
+    }
+  });
+}
 
 // Main function to generate and append a weather forecast
 function getWeather(location) {
@@ -210,47 +250,6 @@ function getLocation() {
       longitude: position.coords.longitude,
     };
     getWeather(location);
-  });
-}
-
-// Change tabs
-function changeTabs() {
-  const tabContainer = document.querySelector('.tab.container');
-  const forecastTables = document.querySelectorAll('.forecast.container table');
-
-  // Add event listener to the tab container
-  tabContainer.addEventListener('click', (e) => {
-    if (e.target.tagName === 'LI') {
-      const targetForecast = 'day' + e.target.id.slice(3);
-
-      // Switch active content
-      forecastTables.forEach((forecast) => {
-        if (forecast.id === targetForecast) {
-          forecast.classList.add('active');
-        } else {
-          forecast.classList.remove('active');
-        }
-      });
-
-      // Switch active tab
-      tabContainer.querySelectorAll('li').forEach((tab) => {
-        if (tab === e.target) {
-          tab.classList.add('active');
-        } else {
-          tab.classList.remove('active');
-        }
-      });
-    }
-  });
-}
-
-// Remove forecasts
-function removeForecasts() {
-  const tableRows = document.querySelectorAll('tr');
-  tableRows.forEach((row) => {
-    while (row.firstChild) {
-      row.removeChild(row.firstChild);
-    }
   });
 }
 

@@ -4,6 +4,8 @@ A small web page providing UK weather forecasts, built as a beginner JavaScript 
 
 It uses the Google Geolocation API to locate the user, the Google Geocoding API to provide a search functionality, and the Open Weather Map API to provide forecasts.
 
+![](example.png)
+
 ## Locating the user
 
 We need to know where the user wants a forecast for; there are two methods used for this.

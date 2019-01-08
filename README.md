@@ -1,6 +1,8 @@
 # Weather Forecast
 
-A small web page providing UK weather forecasts, built as a beginner JavaScript project. It uses the Google Geolocation API to locate the user, the Google Geocoding API to provide a search functionality, and the Open Weather Map API to provide forecasts.
+A small web page providing UK weather forecasts, built as a beginner JavaScript project.
+
+It uses the Google Geolocation API to locate the user, the Google Geocoding API to provide a search functionality, and the Open Weather Map API to provide forecasts.
 
 ## Locating the user
 
@@ -42,9 +44,7 @@ We round the provided temperature and add the '°C' unit to it.
 
 #### Wind
 
-Open Weather Map provides wind direction and speed.
-
-We round the speed and convert it from m/s to mph.
+Open Weather Map provides wind direction and speed. We round the speed and convert it from m/s to mph.
 
 ### Appending
 
@@ -52,4 +52,4 @@ Each day of the 5 day forecast is separated into its own tab. We need to determi
 
 Once we have the correct tab we add the time, the icon, the temperature and the wind speed.
 
-We use the provided wind direction to rotate the icon that now contains the wind speed.
+We use the provided wind direction to rotate the icon that now contains the wind speed, to indicate wind direction visually.

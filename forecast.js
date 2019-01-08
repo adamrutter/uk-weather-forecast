@@ -1,60 +1,3 @@
-// Event listeners
-document.addEventListener('DOMContentLoaded', getLocation());
-document.addEventListener('DOMContentLoaded,', changeTabs());
-document.querySelector('.search.container').addEventListener('submit', event => locationSearch(event));
-
-// Get location of user and call the getWeather function
-function getLocation() {
-  navigator.geolocation.getCurrentPosition(position => {
-    const location = {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude
-    }
-    getWeather(location);
-  });
-}
-
-// Main function to generate and append a weather forecast
-function getWeather(location) {
-  // Construct api query for Open Weather Map
-  const apiKey = '4d5128da40eb9555a11cfde0c4a093c8';
-  const apiEndpoint = 'http://api.openweathermap.org/data/2.5/forecast?';
-  const latitude = location.latitude;
-  const longitude = location.longitude;
-  const units = 'metric';
-  const apiQuery = apiEndpoint + 'lat=' + latitude + '&lon=' + longitude + '&units=' + units + '&appid=' + apiKey;
-
-  // Fetch data from Open Weather Map
-  fetch(apiQuery)
-    .then(response => response.json())
-    .then(jsonResponse => {
-
-      // Loop through all forecast data and append to the document
-      for (i = 0; i < jsonResponse.list.length; i++) {
-        const forecast = jsonResponse.list[i];
-        const todayDate = new Date;
-        const forecastDate = new Date(forecast.dt_txt);
-        const tableId = 'day' + dayId(forecastDate);
-        const currentTable = document.getElementById(tableId);
-
-        // Formate and append data to the document
-        appendForecast(formatData(forecast, forecastDate), currentTable);
-
-        // Add the day to the tab bar if it is not there already
-        nameTab(todayDate, forecastDate);
-      }
-
-      // Append the forecast location to the page
-      document.getElementById('location').textContent = jsonResponse.city.name;
-
-      // Make first forecast active
-      makeActive();
-
-      // Hide any empty tabs
-      hideEmpty();
-    });
-}
-
 // Function to append a forecast to the page
 function appendForecast(forecast, currentTable) {
   // Get rows from the current table
@@ -82,65 +25,57 @@ function appendForecast(forecast, currentTable) {
   const newWindElement = document.createElement('TD');
 
   const windSpeedElement = document.createElement('DIV');
-  windSpeedElement.classList.add('windspeed', 'container')
+  windSpeedElement.classList.add('windspeed', 'container');
   windSpeedElement.textContent = forecast.wind.speed;
 
   const windDirElement = document.createElement('IMG');
   windDirElement.src = 'img/arrow.svg';
-  windDirElement.style.transform = 'rotate(' + forecast.wind.direction + 'deg)'
+  windDirElement.style.transform = 'rotate(' + forecast.wind.direction + 'deg)';
 
   newWindElement.appendChild(windSpeedElement);
   newWindElement.appendChild(windDirElement);
   windRow.appendChild(newWindElement);
 }
 
-// Format the fetched json data
-function formatData(forecast, forecastDate) {
-  const formattedData = {
-    time: forecastDate.getHours().pad(2) + ':' + forecastDate.getMinutes().pad(2),
-    icon: weatherIcon(forecast.weather[0].icon),
-    temp: Math.round(forecast.main.temp) + '°C',
-    wind: {
-      speed: Math.round(forecast.wind.speed * 2.23694),
-      direction: forecast.wind.deg
-    }
-  };
-  return formattedData;
-}
-
-// Function to name individual tabs
-function nameTab(todayDate, forecastDate) {
-  const tabId = 'tab' + dayId(forecastDate);
-  const tabButton = document.getElementById(tabId);
-  const dayName = [
-    'Sun',
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-  ];
-
-  if (!tabButton.textContent) {
-    tabButton.textContent = dayName[forecastDate.getDay()];
-  }
-
-  // Change the tab name to today if it represents today
-  if (tabButton.textContent === dayName[todayDate.getDay()]) {
-    tabButton.textContent = 'Today';
-  }
-}
-
 // Function to determine the id, which is the number of days ahead the forecast is
 function dayId(forecastDate) {
   const today = new Date();
-  today.setHours(0,0,0,0);
-  const forecastDay = new Date(forecastDate); forecastDay.setHours(0,0,0,0);
+  today.setHours(0, 0, 0, 0);
+  const forecastDay = new Date(forecastDate);
+  forecastDay.setHours(0, 0, 0, 0);
 
-  return Math.round(Math.abs((today - forecastDay)/(24*60*60*1000)));
+  return Math.round(Math.abs((today - forecastDay) / (24 * 60 * 60 * 1000)));
 }
 
+// Make first forecast active
+function makeActive() {
+  const firstForecast = document.querySelector('.forecast.container td').parentNode.parentNode.parentNode; // Finds the first forecast by searching for the first td element and travesing up the dom
+  const firstForecastTabId = 'tab' + firstForecast.id.slice(3);
+  const firstForecastTab = document.getElementById(firstForecastTabId);
+
+  // Disable any previous active tab or active table if there are any
+  if (document.querySelector('.forecast.container table.active')) {
+    document.querySelector('.forecast.container table.active').classList.remove('active');
+  }
+
+  if (document.querySelector('.tab.container li.active')) {
+    document.querySelector('.tab.container li.active').classList.remove('active');
+  }
+
+  firstForecast.classList.add('active');
+  firstForecastTab.classList.add('active');
+}
+
+// Hide empty tabs
+function hideEmpty() {
+  const tabs = document.querySelectorAll('.tab.container li');
+
+  tabs.forEach((tab) => {
+    if (!tab.textContent) {
+      tab.style.flexGrow = 0;
+    }
+  });
+}
 
 // Function to add an icon, based on the icon code from Open Weather Map
 function weatherIcon(code) {
@@ -186,18 +121,110 @@ function weatherIcon(code) {
   }
 }
 
+// Format the fetched json data
+function formatData(forecast, forecastDate) {
+  const formattedData = {
+    time: forecastDate.getHours().pad(2) + ':' + forecastDate.getMinutes().pad(2),
+    icon: weatherIcon(forecast.weather[0].icon),
+    temp: Math.round(forecast.main.temp) + '°C',
+    wind: {
+      speed: Math.round(forecast.wind.speed * 2.23694),
+      direction: forecast.wind.deg,
+    },
+  };
+  return formattedData;
+}
+
+// Function to name individual tabs
+function nameTab(todayDate, forecastDate) {
+  const tabId = 'tab' + dayId(forecastDate);
+  const tabButton = document.getElementById(tabId);
+  const dayName = [
+    'Sun',
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+  ];
+
+  if (!tabButton.textContent) {
+    tabButton.textContent = dayName[forecastDate.getDay()];
+  }
+
+  // Change the tab name to today if it represents today
+  if (tabButton.textContent === dayName[todayDate.getDay()]) {
+    tabButton.textContent = 'Today';
+  }
+}
+
+
+// Main function to generate and append a weather forecast
+function getWeather(location) {
+
+  // Construct api query for Open Weather Map
+  const apiKey = '4d5128da40eb9555a11cfde0c4a093c8';
+  const apiEndpoint = 'http://api.openweathermap.org/data/2.5/forecast?';
+  const latitude = location.latitude;
+  const longitude = location.longitude;
+  const units = 'metric';
+  const apiQuery = apiEndpoint + 'lat=' + latitude + '&lon=' + longitude + '&units=' + units + '&appid=' + apiKey;
+
+  // Fetch data from Open Weather Map
+  fetch(apiQuery)
+    .then(response => response.json())
+    .then((jsonResponse) => {
+
+      // Loop through all forecast data and append to the document
+      for (let i = 0; i < jsonResponse.list.length; i++) {
+        const forecast = jsonResponse.list[i];
+        const todayDate = new Date();
+        const forecastDate = new Date(forecast.dt_txt);
+        const tableId = 'day' + dayId(forecastDate);
+        const currentTable = document.getElementById(tableId);
+
+        // Formate and append data to the document
+        appendForecast(formatData(forecast, forecastDate), currentTable);
+
+        // Add the day to the tab bar if it is not there already
+        nameTab(todayDate, forecastDate);
+      }
+
+      // Append the forecast location to the page
+      document.getElementById('location').textContent = jsonResponse.city.name;
+
+      // Make first forecast active
+      makeActive();
+
+      // Hide any empty tabs
+      hideEmpty();
+    });
+}
+
+// Get location of user and call the getWeather function
+function getLocation() {
+  navigator.geolocation.getCurrentPosition((position) => {
+    const location = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+    getWeather(location);
+  });
+}
+
 // Change tabs
 function changeTabs() {
   const tabContainer = document.querySelector('.tab.container');
   const forecastTables = document.querySelectorAll('.forecast.container table');
 
   // Add event listener to the tab container
-  tabContainer.addEventListener('click', e => {
+  tabContainer.addEventListener('click', (e) => {
     if (e.target.tagName === 'LI') {
       const targetForecast = 'day' + e.target.id.slice(3);
 
       // Switch active content
-      forecastTables.forEach(forecast => {
+      forecastTables.forEach((forecast) => {
         if (forecast.id === targetForecast) {
           forecast.classList.add('active');
         } else {
@@ -206,7 +233,7 @@ function changeTabs() {
       });
 
       // Switch active tab
-      tabContainer.querySelectorAll('li').forEach(tab => {
+      tabContainer.querySelectorAll('li').forEach((tab) => {
         if (tab === e.target) {
           tab.classList.add('active');
         } else {
@@ -217,23 +244,14 @@ function changeTabs() {
   });
 }
 
-// Make first forecast active
-function makeActive() {
-  const firstForecast = document.querySelector('.forecast.container td').parentNode.parentNode.parentNode; // Finds the first forecast by searching for the first td element and travesing up the dom
-  const firstForecastTabId = 'tab' + firstForecast.id.slice(3);
-  const firstForecastTab = document.getElementById(firstForecastTabId);
-
-  // Disable any previous active tab or active table if there are any
-  if (document.querySelector('.forecast.container table.active')) {
-    document.querySelector('.forecast.container table.active').classList.remove('active');
-  }
-
-  if (document.querySelector('.tab.container li.active')) {
-    document.querySelector('.tab.container li.active').classList.remove('active');
-  }
-
-  firstForecast.classList.add('active');
-  firstForecastTab.classList.add('active');
+// Remove forecasts
+function removeForecasts() {
+  const tableRows = document.querySelectorAll('tr');
+  tableRows.forEach((row) => {
+    while (row.firstChild) {
+      row.removeChild(row.firstChild);
+    }
+  });
 }
 
 // Search bar function
@@ -242,7 +260,7 @@ function locationSearch(event) {
   event.preventDefault();
 
   // Format the submitted string
-  const address = event.target[0].value.replace(/ /g,"+");
+  const address = event.target[0].value.replace(/ /g, '+');
 
   // Construct the api query
   const apiEndpoint = 'https://maps.googleapis.com/maps/api/geocode/';
@@ -254,64 +272,32 @@ function locationSearch(event) {
   // Fetch data from google geolocate api and format
   fetch(apiQuery)
     .then(response => response.json())
-    .then(jsonResponse => {
+    .then((jsonResponse) => {
       const location = {
         latitude: jsonResponse.results[0].geometry.location.lat,
-        longitude: jsonResponse.results[0].geometry.location.lng
-      }
+        longitude: jsonResponse.results[0].geometry.location.lng,
+      };
 
       // Remove previous forecast data
       removeForecasts();
 
       // Get new forecast
       getWeather(location);
-    })
+    });
 
   // Reset the form input box
-  event.target[0].value = '';
-}
-
-// Remove forecasts
-function removeForecasts() {
-  const tableRows = document.querySelectorAll('tr');
-  tableRows.forEach(row => {
-    while (row.firstChild) {
-      row.removeChild(row.firstChild);
-    }
-  })
-}
-
-// Hide empty tabs
-function hideEmpty() {
-  const tabs = document.querySelectorAll('.tab.container li');
-
-  tabs.forEach(tab => {
-    if (!tab.textContent) {
-      tab.style.flexGrow = 0;
-    }
-  });
+  const searchBar = event.target[0];
+  searchBar.value = '';
 }
 
 // Function to pad numbers
-Number.prototype.pad = function(size) {
-  var s = String(this);
-  while (s.length < (size || 2)) {s = "0" + s;}
+Number.prototype.pad = function (size) {
+  const s = String(this);
+  while (s.length < (size || 2)) { s = '0' + s; }
   return s;
-}
+};
 
-// If not already set, add the forecast date to the current table as an attribute
-// if (!currentTable.hasAttribute('data-date')) {
-//   currentTable.setAttribute('data-date', forecastDate);
-// }
-
-// Format individual forecast data
-// const formattedTime = forecastDate.getHours().pad(2) + ':' + forecastDate.getMinutes().pad(2);
-// const formattedIcon = weatherIcon(forecast.weather[0].icon);
-// const formattedTemp = Math.round(forecast.main.temp) + '°C';
-// const formattedWindSpeed = Math.round(forecast.wind.speed * 2.23694);
-// const formattedWindDeg = forecast.wind.deg;
-
-// Append data to the document
-// appendForecast(currentTable, formattedTime, formattedIcon, formattedTemp, formattedWindSpeed, formattedWindDeg);
-
-// const firstForecast =   document.querySelector('.forecast.container table[data-date]'); // Finds first forecast with the data-date   attribute indicating it has data
+// Event listeners
+document.addEventListener('DOMContentLoaded', getLocation());
+document.addEventListener('DOMContentLoaded,', changeTabs());
+document.querySelector('.search.container').addEventListener('submit', event => locationSearch(event));

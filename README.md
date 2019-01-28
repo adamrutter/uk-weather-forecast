@@ -4,6 +4,8 @@ A small web page providing UK weather forecasts, built as a beginner JavaScript 
 
 It uses the Google Geolocation API to locate the user, the Google Geocoding API to provide a search functionality, and the Open Weather Map API to provide forecasts.
 
+The web page can be found [here](https://adams-weather-forecast.netlify.com/).
+
 ![](example.png)
 
 ## Locating the user
@@ -28,7 +30,7 @@ Once we have the location, we can query the Open Weather Map API using the provi
 
 ## Formatting and appending the forecast
 
-We can now loop through the 3 hourly forecasts, format them, and append them to the document.
+We can now loop through the 3-hourly forecasts, format them, and append them to the document.
 
 ### Formatting
 

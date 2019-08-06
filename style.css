@@ -218,6 +218,11 @@ main p.top {
   padding: 0 15px;
 }
 
+.search.container input[type="text"] {
+  background: hsla(0, 0%, 100%, 1);
+  color: hsla(0, 0%, 7.5%, 1);
+}
+
 .search.container input {
   flex-grow: 1;
   margin: 0 15px 15px 15px;

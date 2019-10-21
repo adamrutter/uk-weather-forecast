@@ -1,9 +1,12 @@
 /* Global */
 
+* {
+  font-family: 'Lato', sans-serif;
+}
+
 html {
   background: linear-gradient(to right, #143f6f, #3c6796);
-  color: hsla(0, 0%, 10%, 1);
-  font-family: 'Open Sans', sans-serif;
+  color: hsla(0, 0%, 17.5%, 1);
   font-size: 16px;
 }
 
